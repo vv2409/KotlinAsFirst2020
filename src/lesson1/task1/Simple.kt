@@ -84,7 +84,7 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double =
  * Пользователь задает угол в градусах, минутах и секундах (например, 36 градусов 14 минут 35 секунд).
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
-fun angleInRadian(deg: Int, min: Int, sec: Int): Double = (deg + min / 60 + sec / 3600) * 0.0175
+fun angleInRadian(deg: Int, min: Int, sec: Int): Double = (deg * 3600 + min * 60 + sec ) * 3.14159 / 180 / 3600
 
 
 /**
@@ -93,7 +93,7 @@ fun angleInRadian(deg: Int, min: Int, sec: Int): Double = (deg + min / 60 + sec 
  * Найти длину отрезка, соединяющего точки на плоскости с координатами (x1, y1) и (x2, y2).
  * Например, расстояние между (3, 0) и (0, 4) равно 5
  */
-fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double): Double =((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
+fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double): Double = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
 
 /**
  * Простая (2 балла)
