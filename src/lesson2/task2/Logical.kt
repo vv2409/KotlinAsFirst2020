@@ -95,19 +95,9 @@ fun circleInside(
  * Вернуть true, если кирпич пройдёт
 */
 
-fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-    if (a >= r) return when {
-        b >= s -> true
-        c >= s -> true
-        else -> false
-    } else if (b >= r) return when {
-    a >= s -> true
-    c >= s -> true
+fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean =when {
+a <= r && (s >= b || s >= c) -> true
+    b <= r && (s >= a || s >= c) -> true
+    c <= r && (s >= a || s >= b) -> true
     else -> false
-    } else if (c >= r) return when {
-        a >= s -> true
-        b >= s -> true
-        else -> false
-    }
-    else return false
 }
