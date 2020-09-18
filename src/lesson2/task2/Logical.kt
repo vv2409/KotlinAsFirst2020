@@ -18,7 +18,11 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
  * Четырехзначное число назовем счастливым, если сумма первых двух ее цифр равна сумме двух последних.
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
-fun isNumberHappy(number: Int): Boolean = TODO()
+fun isNumberHappy(number: Int): Boolean =
+    if ((number % 10 + (number / 10) % 10) == ((number / 100) % 10 + number / 1000))
+     true else false
+
+
 
 /**
  * Простая (2 балла)
@@ -36,7 +40,38 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean = TODO()
  * Дан номер месяца (от 1 до 12 включительно) и год (положительный).
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
-fun daysInMonth(month: Int, year: Int): Int = TODO()
+fun daysInMonth(month: Int, year: Int): Int {
+    if ((year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0))) return when {
+        month == 2 -> 29
+        month == 1 -> 31
+        month == 3 -> 31
+        month == 5 -> 31
+        month == 7 -> 31
+        month == 8 -> 31
+        month == 10 -> 31
+        month == 12 -> 31
+        month == 4 -> 30
+        month == 6 -> 30
+        month == 9 -> 30
+        month == 11 -> 30
+        else -> 0
+    }
+    else return when {
+        month == 2 -> 28
+        month == 1 -> 31
+        month == 3 -> 31
+        month == 5 -> 31
+        month == 7 -> 31
+        month == 8 -> 31
+        month == 10 -> 31
+        month == 12 -> 31
+        month == 4 -> 30
+        month == 6 -> 30
+        month == 9 -> 30
+        month == 11 -> 30
+        else -> 0
+    }
+}
 
 /**
  * Простая (2 балла)
@@ -58,5 +93,21 @@ fun circleInside(
  * Считать, что совпадения длин сторон достаточно для прохождения кирпича, т.е., например,
  * кирпич 4 х 4 х 4 пройдёт через отверстие 4 х 4.
  * Вернуть true, если кирпич пройдёт
- */
-fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = TODO()
+*/
+
+fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
+    if (a >= r) return when {
+        b >= s -> true
+        c >= s -> true
+        else -> false
+    } else if (b >= r) return when {
+    a >= s -> true
+    c >= s -> true
+    else -> false
+    } else if (c >= r) return when {
+        a >= s -> true
+        b >= s -> true
+        else -> false
+    }
+    else return false
+}
