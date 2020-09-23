@@ -128,18 +128,12 @@ fun whichRookThreatens(
     val w = (kingX != rookX2)
     val t = (kingY != rookY2)
     return when {
-        (q && u) -> 3
-        (q && j) -> 3
-        (k && u) -> 3
-        (k && j) -> 3
-        (q && w) -> 1
-        (q && t) -> 1
-        (k && w) -> 1
-        (k && t) -> 1
-        (f && u) -> 2
-        (f && j) -> 2
-        (h && u) -> 2
-        (h && j) -> 2
+        (q && (u || j)) -> 3
+        (k && (u || j)) -> 3
+        (q && (w || t)) -> 1
+        (k && (w || t)) -> 1
+        (f && (u || j)) -> 2
+        (h && (u || j)) -> 2
         else -> 0
     }
 }
@@ -158,7 +152,7 @@ fun whichRookThreatens(
 fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
-    bishopX: Int, bishopY: Int
+    bishopX: Int, bishopY: Int,
 ): Int = TODO()
 
 /**
@@ -171,6 +165,7 @@ fun rookOrBishopThreatens(
  */
 
 fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
+
 /**
  * Средняя (3 балла)
  *
@@ -179,15 +174,13 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    return if (c <= a) when {
-        d < a -> (-1)
-        d <= b -> (d - a)
-        else -> (b - a)
-    }
-    else if (c <= b) if (d <= b) (d - c) else (b - c)
-    else (-1)
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = when {
+    c <= a && d < a -> -1
+    c <= a && d <= b -> d - a
+    c <= a && d > b -> b - a
+    c <= b && d <= b -> d - c
+    b in c until d -> b - c
+    else -> -1
 }
-
 
 
