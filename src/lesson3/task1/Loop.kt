@@ -2,7 +2,10 @@
 
 package lesson3.task1
 
-import kotlin.math.sqrt
+import lesson1.task1.sqr
+import java.lang.Math.pow
+import kotlin.math.*
+import java.math.RoundingMode as MathRoundingMode
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -72,7 +75,16 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int = TODO()
+fun digitNumber(n: Int): Int {
+    var count = 0
+    return if (n in 0..9) 1 else {
+        while (n > 9) {
+            count += 1
+            n == n / 10
+        }
+        count
+    }
+}
 
 /**
  * Простая (2 балла)
@@ -80,7 +92,8 @@ fun digitNumber(n: Int): Int = TODO()
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = TODO()
+fun fib(n: Int): Int = if (n <= 2) 1 else fib(n - 1) + fib(n - 2)
+
 
 /**
  * Простая (2 балла)
@@ -112,7 +125,18 @@ fun maxDivisor(n: Int): Int = TODO()
  * Написать функцию, которая находит, сколько шагов требуется для
  * этого для какого-либо начального X > 0.
  */
-fun collatzSteps(x: Int): Int = TODO()
+fun collatzSteps(x: Int): Int {
+    var count: Int = 0
+    var xn = x
+    run {
+        while (xn > 1) {
+            count += 1
+            if (xn % 2 == 0)
+                xn /= 2 else xn = 3 * xn + 1
+        }
+        return count
+    }
+}
 
 /**
  * Средняя (3 балла)
@@ -147,7 +171,19 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var nn = n
+    var m = 0
+    var c = 0
+    run {
+        while (nn > 0) {
+            c = nn % 10
+            m = m * 10 + c
+            nn /= 10
+        }
+        return m
+    }
+}
 
 /**
  * Средняя (3 балла)
@@ -158,7 +194,7 @@ fun revert(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = TODO()
+fun isPalindrome(n: Int): Boolean = revert(n) == n
 
 /**
  * Средняя (3 балла)
@@ -179,7 +215,19 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x: Double, eps: Double): Double {
+    var s = x
+    var y = x
+    var n = 1
+    var d = 0.0
+    while (abs(y) > eps) {
+        d += 1.0
+        n = 2 * n + 1
+        y = (-1.0).pow(d) * x.pow(n) / factorial(n)
+        s += y
+    }
+    return s
+}
 
 /**
  * Средняя (4 балла)
@@ -190,7 +238,20 @@ fun sin(x: Double, eps: Double): Double = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x: Double, eps: Double): Double {
+    var s = 1.0
+    var y = x
+    var n = 1
+    var d = 0.0
+    while (abs(y) > eps) {
+        d += 1.0
+        n += 2
+        y = (-1.0).pow(d) * x.pow(n) / factorial(n)
+        s += y
+    }
+    return s
+}
+
 
 /**
  * Сложная (4 балла)
@@ -201,7 +262,34 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var k = 0
+    var i = 0
+    var b = 0
+    while (k < n) {
+        i += 1
+        b = sqr(i)
+        var c = 1
+        var d = 10
+        while (b / d != 0) {
+            d *= 10
+            c += 1
+        }
+        if (d != 100) d /= 10
+        k += c
+        var a = 0
+        if (k > n) {
+            while (k != n) {
+                k -= 1
+                d /= 10
+                a = (b / d) % 10
+            }
+            return a
+        }
+    }
+    return if (b / 10 != 0) b % 10 else b
+}
+
 
 /**
  * Сложная (5 баллов)
@@ -212,4 +300,31 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var k = 0
+    var i = 0
+    var b = 0
+    while (k < n) {
+        i += 1
+        b = fib(i)
+        var c = 1
+        var d = 10
+        while (b / d != 0) {
+            d *= 10
+            c += 1
+        }
+        if (d != 100) d /= 10
+        k += c
+        var a = 0
+        if (k > n) {
+            while (k != n) {
+                k -= 1
+                d /= 10
+                a = (b / d) % 10
+            }
+            return a
+        }
+    }
+    return if (b / 10 != 0) b % 10 else b
+}
+
