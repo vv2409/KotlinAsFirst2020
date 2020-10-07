@@ -76,15 +76,15 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun digitNumber(n: Int): Int {
-    var count = 0
-    return if (n in 0..9) 1 else {
-        while (n > 9) {
-            count += 1
-            n == n / 10
-        }
-        count
+    var count = 1
+    var k = n
+    while (k > 0) {
+        count += 1
+        k /= 10
     }
+    return count
 }
+
 
 /**
  * Простая (2 балла)
@@ -215,19 +215,7 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double): Double {
-    var s = x
-    var y = x
-    var n = 1
-    var d = 0.0
-    while (abs(y) > eps) {
-        d += 1.0
-        n = 2 * n + 1
-        y = (-1.0).pow(d) * x.pow(n) / factorial(n)
-        s += y
-    }
-    return s
-}
+fun sin(x: Double, eps: Double): Double = TODO()
 
 /**
  * Средняя (4 балла)
@@ -238,20 +226,7 @@ fun sin(x: Double, eps: Double): Double {
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
-fun cos(x: Double, eps: Double): Double {
-    var s = 1.0
-    var y = x
-    var n = 1
-    var d = 0.0
-    while (abs(y) > eps) {
-        d += 1.0
-        n += 2
-        y = (-1.0).pow(d) * x.pow(n) / factorial(n)
-        s += y
-    }
-    return s
-}
-
+fun cos(x: Double, eps: Double): Double = TODO()
 
 /**
  * Сложная (4 балла)
@@ -300,31 +275,4 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int {
-    var k = 0
-    var i = 0
-    var b = 0
-    while (k < n) {
-        i += 1
-        b = fib(i)
-        var c = 1
-        var d = 10
-        while (b / d != 0) {
-            d *= 10
-            c += 1
-        }
-        if (d != 100) d /= 10
-        k += c
-        var a = 0
-        if (k > n) {
-            while (k != n) {
-                k -= 1
-                d /= 10
-                a = (b / d) % 10
-            }
-            return a
-        }
-    }
-    return if (b / 10 != 0) b % 10 else b
-}
-
+fun fibSequenceDigit(n: Int): Int = TODO()

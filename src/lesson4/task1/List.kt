@@ -3,6 +3,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
 import kotlin.math.sqrt
 
 // Урок 4: списки
@@ -120,14 +121,29 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double = TODO()
+fun abs(v: List<Double>): Double {
+    var c = 0.0
+    for (i in v.indices) {
+        c += sqr(v[i])
+    }
+    return sqrt(c)
+}
 
 /**
  * Простая (2 балла)
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = TODO()
+fun mean(list: List<Double>): Double {
+    var c = 0.0
+    var k = 0
+    for (i in list.indices) {
+        c += list[i]
+        k += 1
+    }
+    return if (k == 0) 0.0 else
+        c / k
+}
 
 /**
  * Средняя (3 балла)
@@ -241,7 +257,21 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String {
+    val arab = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
+    val rims = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
+    var s = ""
+    var k = n
+    var i = 12
+    while (i >= 0) {
+        while (k >= arab[i]) {
+            k -= arab[i]
+            s += rims[i]
+        }
+        i -= 1
+    }
+    return s
+}
 
 /**
  * Очень сложная (7 баллов)
