@@ -92,10 +92,18 @@ fun digitNumber(n: Int): Int {
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = when (n) {
-    1 -> 1
-    2 -> 1
-    else -> fib(n - 1) + fib(n - 2)
+fun fib(n: Int): Int {
+    var fib1 = 1
+    var fib2 = 1
+    var i = 0
+    while (i < n - 2) {
+        var fibi = 0
+        fibi = fib1 + fib2
+        fib1 = fib2
+        fib2 = fibi
+        i += 1
+    }
+    return fib2
 }
 
 
@@ -130,16 +138,14 @@ fun maxDivisor(n: Int): Int = TODO()
  * этого для какого-либо начального X > 0.
  */
 fun collatzSteps(x: Int): Int {
-    var count: Int = 0
+    var count = 0
     var xn = x
-    run {
-        while (xn > 1) {
-            count += 1
-            if (xn % 2 == 0)
-                xn /= 2 else xn = 3 * xn + 1
-        }
-        return count
+    while (xn > 1) {
+        count += 1
+        if (xn % 2 == 0)
+            xn /= 2 else xn = 3 * xn + 1
     }
+    return count
 }
 
 /**
@@ -178,15 +184,13 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
 fun revert(n: Int): Int {
     var nn = n
     var m = 0
-    var c = 0
-    run {
-        while (nn > 0) {
-            c = nn % 10
-            m = m * 10 + c
-            nn /= 10
-        }
-        return m
+    while (nn > 0) {
+        var c = 0
+        c = nn % 10
+        m = m * 10 + c
+        nn /= 10
     }
+    return m
 }
 
 /**
@@ -248,25 +252,11 @@ fun squareSequenceDigit(n: Int): Int {
     while (k < n) {
         i += 1
         b = sqr(i)
-        var c = 1
-        var d = 10
-        while (b / d != 0) {
-            d *= 10
-            c += 1
-        }
-        if (d != 100) d /= 10
+        val c = digitNumber(b)
         k += c
-        var a = 0
-        if (k > n) {
-            while (k != n) {
-                k -= 1
-                d /= 10
-                a = (b / d) % 10
-            }
-            return a
-        }
     }
-    return if (b / 10 != 0) b % 10 else b
+    val d = 10.0.pow(k - n).toInt()
+    return if (k == n) b % 10 else (b / d) % 10
 }
 
 
