@@ -97,8 +97,7 @@ fun fib(n: Int): Int {
     var fib2 = 1
     var i = 0
     while (i < n - 2) {
-        var fibi = 0
-        fibi = fib1 + fib2
+        val fibi = fib1 + fib2
         fib1 = fib2
         fib2 = fibi
         i += 1
@@ -185,8 +184,7 @@ fun revert(n: Int): Int {
     var nn = n
     var m = 0
     while (nn > 0) {
-        var c = 0
-        c = nn % 10
+        val c = nn % 10
         m = m * 10 + c
         nn /= 10
     }

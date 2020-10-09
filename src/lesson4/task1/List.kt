@@ -1,11 +1,13 @@
-@file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence")
+@file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence", "PLATFORM_CLASS_MAPPED_TO_KOTLIN")
 
 package lesson4.task1
+
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
 import kotlin.math.sqrt
-import kotlin.text.StringBuilder
+import kotlin.String as String1
+
 
 // Урок 4: списки
 // Максимальное количество баллов = 12
@@ -257,132 +259,136 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String {
+fun roman(n: Int): kotlin.String {
     val arab = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
     val rims = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
-    val st = StringBuilder("")
+    var st = ""
     var k = n
     var i = rims.size - 1
     while (i >= 0) {
         while (k >= arab[i]) {
             k -= arab[i]
-            st.append(rims[i])
+            st = buildString { append(st); append(rims[i]) }
         }
         i -= 1
     }
-    return st.toString()
+    return st
 }
 
 /**
+ *
  * Очень сложная (7 баллов)
  *
  * Записать заданное натуральное число 1..999999 прописью по-русски.
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String {
-    if (n == 0) return "ноль" else {
-        val a = listOf(
-            "",
-            "один",
-            "два",
-            "три",
-            "четыре",
-            "пять",
-            "шесть",
-            "семь",
-            "восемь",
-            "девять",
-            "десять",
-            "одиннадцать",
-            "двенадцать",
-            "тринадцать",
-            "четырнадцать",
-            "пятнадцать",
-            "шестнадцать",
-            "семнадцать",
-            "восемнадцать",
-            "девятнадцать"
-        )
-        val b = listOf("", "",
-            "двадцать",
-            "тридцать",
-            "сорок",
-            "пятьдесят",
-            "шестьдесят",
-            "семьдесят",
-            "восемьдесят",
-            "девяносто"
-        )
-        val c =
-            listOf("",
-                "сто",
-                "двести",
-                "триста",
-                "четыреста",
-                "пятьсот",
-                "шестьсот",
-                "семьсот",
-                "восемьсот",
-                "девятьсот")
-        val d = listOf(
-            "тысяч",
-            "одна тысяча",
-            "две тысячи",
-            "три тысячи",
-            "четыре тысячи",
-            "пять тысяч",
-            "шесть тысяч",
-            "семь тысяч",
-            "восемь тысяч",
-            "девять тысяч",
-            "десять тысяч",
-            "одиннадцать тысяч",
-            "двенадцать тысяч",
-            "тринадцать тысяч",
-            "четырнадцать тысяч",
-            "пятнадцать тысяч",
-            "шестнадцать тысяч",
-            "семнадцать тысяч",
-            "восемнадцать тысяч",
-            "девятнадцать тысяч")
-        val p = " "
 
-        var k = StringBuilder("")
-        var c1 = 0
-        var c2 = 0
-        var c4 = 0
-        var c5 = 0
-        if (n % 100 < 20) c1 = n % 100 else {
-            c1 = n % 10
-            c2 = (n % 100) / 10
-        }
-        val c3 = (n % 1000) / 100
-        if ((n / 1000) % 100 < 20) c4 = (n / 1000) % 100 else {
-            c4 = (n % 10000) / 1000
-            c5 = (n % 100000) / 10000
-        }
-        val c6 = n / 100000
-        if (c6 != 0) k.append(c[c6] + p)
-        if (c5 != 0) k.append(b[c5] + p)
-        if (c4 == 0) {
-            if (c6 != 0 || c5 != 0) k.append(d[c4])
-        } else k.append(d[c4])
-        if (c6 == 0 && c5 == 0 && c4 == 0) {
-            if (c3 != 0) k.append(c[c3])
-        } else {
-            if (c3 != 0) k.append(p + c[c3])
-        }
-        if (c6 == 0 && c5 == 0 && c4 == 0 && c3 == 0) {
-            if (c2 != 0) k.append(b[c2])
-        } else {
-            if (c2 > 1) k.append(p + b[c2])
-        }
-        if (c6 == 0 && c5 == 0 && c4 == 0 && c3 == 0 && c2 == 0) {
-            if (c1 != 0) k.append(a[c1])
-        } else {
-            if (c1 != 0) k.append(p + a[c1])
-        }
-        return k.toString()
+fun russian(n: Int): String1 {
+    if (n == 0) {
+        return "ноль"
     }
+    val a = listOf(
+        "",
+        "один",
+        "два",
+        "три",
+        "четыре",
+        "пять",
+        "шесть",
+        "семь",
+        "восемь",
+        "девять",
+        "десять",
+        "одиннадцать",
+        "двенадцать",
+        "тринадцать",
+        "четырнадцать",
+        "пятнадцать",
+        "шестнадцать",
+        "семнадцать",
+        "восемнадцать",
+        "девятнадцать"
+    )
+    val b = listOf("", "",
+        "двадцать",
+        "тридцать",
+        "сорок",
+        "пятьдесят",
+        "шестьдесят",
+        "семьдесят",
+        "восемьдесят",
+        "девяносто"
+    )
+    val c =
+        listOf("",
+            "сто",
+            "двести",
+            "триста",
+            "четыреста",
+            "пятьсот",
+            "шестьсот",
+            "семьсот",
+            "восемьсот",
+            "девятьсот")
+    val d = listOf(
+        "тысяч",
+        "одна тысяча",
+        "две тысячи",
+        "три тысячи",
+        "четыре тысячи",
+        "пять тысяч",
+        "шесть тысяч",
+        "семь тысяч",
+        "восемь тысяч",
+        "девять тысяч",
+        "десять тысяч",
+        "одиннадцать тысяч",
+        "двенадцать тысяч",
+        "тринадцать тысяч",
+        "четырнадцать тысяч",
+        "пятнадцать тысяч",
+        "шестнадцать тысяч",
+        "семнадцать тысяч",
+        "восемнадцать тысяч",
+        "девятнадцать тысяч")
+    val p = " "
+
+    var k = ""
+    var c1 = 0
+    var c2 = 0
+    var c4 = 0
+    var c5 = 0
+    if (n % 100 < 20) c1 = n % 100 else {
+        c1 = n % 10
+        c2 = (n % 100) / 10
+    }
+    val c3 = (n % 1000) / 100
+    if ((n / 1000) % 100 < 20) c4 = (n / 1000) % 100 else {
+        c4 = (n % 10000) / 1000
+        c5 = (n % 100000) / 10000
+    }
+    val c6 = n / 100000
+    if (c6 != 0) k = buildString { append(k); append(c[c6] + p) }
+    if (c5 != 0) k = buildString { append(k); append(b[c5] + p) }
+    if (c4 == 0) {
+        if (c6 != 0 || c5 != 0) k = buildString { append(k); append(d[c4]) }
+    } else k = buildString { append(k); append(d[c4]) }
+    if (c6 == 0 && c5 == 0 && c4 == 0) {
+        if (c3 != 0) k = buildString { append(k); append(c[c3]) }
+    } else {
+        if (c3 != 0) k = buildString { append(k); append(p + c[c3]) }
+    }
+    if (c6 == 0 && c5 == 0 && c4 == 0 && c3 == 0) {
+        if (c2 != 0) k = buildString { append(k); append(b[c2]) }
+    } else {
+        if (c2 > 1) k = buildString { append(k); append(p + b[c2]) }
+    }
+    if (c6 == 0 && c5 == 0 && c4 == 0 && c3 == 0 && c2 == 0) {
+        if (c1 != 0) k = buildString { append(k); append(a[c1]) }
+    } else {
+        if (c1 != 0) k = buildString { append(k); append(p + a[c1]) }
+    }
+    return k
 }
+
