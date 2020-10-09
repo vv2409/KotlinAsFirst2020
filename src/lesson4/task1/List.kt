@@ -6,7 +6,7 @@ package lesson4.task1
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
 import kotlin.math.sqrt
-import kotlin.String as String1
+import kotlin.String
 
 
 // Урок 4: списки
@@ -284,7 +284,7 @@ fun roman(n: Int): kotlin.String {
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 
-fun russian(n: Int): String1 {
+fun russian(n: Int): String {
     if (n == 0) {
         return "ноль"
     }
