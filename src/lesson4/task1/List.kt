@@ -259,21 +259,22 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): kotlin.String {
+fun roman(n: Int): String {
     val arab = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
     val rims = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
-    var st = ""
-    var k = n
-    var i = rims.size - 1
-    while (i >= 0) {
-        while (k >= arab[i]) {
-            k -= arab[i]
-            st = buildString { append(st); append(rims[i]) }
+    return buildString {
+        var k = n
+        var i = rims.size - 1
+        while (i >= 0) {
+            while (k >= arab[i]) {
+                k -= arab[i]
+                append(rims[i])
+            }
+            i -= 1
         }
-        i -= 1
     }
-    return st
 }
+
 
 /**
  *
@@ -352,43 +353,42 @@ fun russian(n: Int): String {
         "семнадцать тысяч",
         "восемнадцать тысяч",
         "девятнадцать тысяч")
-    val p = " "
-
-    var k = ""
-    var c1 = 0
-    var c2 = 0
-    var c4 = 0
-    var c5 = 0
-    if (n % 100 < 20) c1 = n % 100 else {
-        c1 = n % 10
-        c2 = (n % 100) / 10
+    return buildString {
+        val p = " "
+        val c1: Int
+        var c2 = 0
+        val c4: Int
+        var c5 = 0
+        if (n % 100 < 20) c1 = n % 100 else {
+            c1 = n % 10
+            c2 = (n % 100) / 10
+        }
+        val c3 = (n % 1000) / 100
+        if ((n / 1000) % 100 < 20) c4 = (n / 1000) % 100 else {
+            c4 = (n % 10000) / 1000
+            c5 = (n % 100000) / 10000
+        }
+        val c6 = n / 100000
+        if (c6 != 0) append(c[c6] + p)
+        if (c5 != 0) append(b[c5] + p)
+        if (c4 == 0) {
+            if (c6 != 0 || c5 != 0) append(d[c4])
+        } else append(d[c4])
+        if (c6 == 0 && c5 == 0 && c4 == 0) {
+            if (c3 != 0) append(c[c3])
+        } else {
+            if (c3 != 0) append(p + c[c3])
+        }
+        if (c6 == 0 && c5 == 0 && c4 == 0 && c3 == 0) {
+            if (c2 != 0) append(b[c2])
+        } else {
+            if (c2 > 1) append(p + b[c2])
+        }
+        if (c6 == 0 && c5 == 0 && c4 == 0 && c3 == 0 && c2 == 0) {
+            if (c1 != 0) append(a[c1])
+        } else {
+            if (c1 != 0) append(p + a[c1])
+        }
     }
-    val c3 = (n % 1000) / 100
-    if ((n / 1000) % 100 < 20) c4 = (n / 1000) % 100 else {
-        c4 = (n % 10000) / 1000
-        c5 = (n % 100000) / 10000
-    }
-    val c6 = n / 100000
-    if (c6 != 0) k = buildString { append(k); append(c[c6] + p) }
-    if (c5 != 0) k = buildString { append(k); append(b[c5] + p) }
-    if (c4 == 0) {
-        if (c6 != 0 || c5 != 0) k = buildString { append(k); append(d[c4]) }
-    } else k = buildString { append(k); append(d[c4]) }
-    if (c6 == 0 && c5 == 0 && c4 == 0) {
-        if (c3 != 0) k = buildString { append(k); append(c[c3]) }
-    } else {
-        if (c3 != 0) k = buildString { append(k); append(p + c[c3]) }
-    }
-    if (c6 == 0 && c5 == 0 && c4 == 0 && c3 == 0) {
-        if (c2 != 0) k = buildString { append(k); append(b[c2]) }
-    } else {
-        if (c2 > 1) k = buildString { append(k); append(p + b[c2]) }
-    }
-    if (c6 == 0 && c5 == 0 && c4 == 0 && c3 == 0 && c2 == 0) {
-        if (c1 != 0) k = buildString { append(k); append(a[c1]) }
-    } else {
-        if (c1 != 0) k = buildString { append(k); append(p + a[c1]) }
-    }
-    return k
 }
 
