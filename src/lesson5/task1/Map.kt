@@ -101,12 +101,8 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val res = mutableMapOf<Int, MutableList<String>>()
-    for ((stud, great) in grades) {
-        if (res[great] == null)
-            res[great] = mutableListOf()
-
-        res[great]!!.add(stud)
-    }
+    for ((stud, great) in grades)
+        res.getOrPut(great) { mutableListOf() }.add(stud)
     return res
 }
 
@@ -120,13 +116,8 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "z", "b" to "sweet")) -> true
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
-fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
-    for ((key, value) in a) {
-        if (b[key] != value)
-            return false
-    }
-    return true
-}
+fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = a.all { (key, value) -> value == b[key] }
+
 /**
  * Простая (2 балла)
  *
@@ -193,22 +184,14 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
-    val map = mutableMapOf<String, Double>()
-    val c = mutableMapOf<String, Int>()
-    for ((key, value) in stockPrices)
-        if (map[key] == null) {
-            map[key] = 0.0
-            map[key] = map[key]!! + value
-            c[key] = 0
-            c[key] = c[key]!! + 1
-        } else {
-            map[key] = map[key]!! + value
-            c[key] = c[key]!! + 1
-        }
-    for ((key, value) in map) {
-        map[key] = value / c[key]!!
+    val c = mutableMapOf<String, Double>()
+    val d = stockPrices.groupBy { it.first }
+    for ((key, value) in d) {
+        c[key] = 0.0
+        for ((a, b) in value) c[key] = (c[key]!! + b)
+        c[key] = c[key]!! / value.size
     }
-    return map
+    return c
 }
 
 /**
