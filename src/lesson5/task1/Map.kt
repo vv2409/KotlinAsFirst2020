@@ -187,12 +187,11 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     val c = mutableMapOf<String, Double>()
     val d = stockPrices.groupBy { it.first }
     for ((key, value) in d) {
-        c[key] = 0.0
-        for ((a, b) in value) c[key] = (c[key]!! + b)
-        c[key] = c[key]!! / value.size
+        c[key] = value.sumOf { it.second } / value.size
     }
     return c
 }
+
 
 /**
  * Средняя (4 балла)
@@ -235,13 +234,13 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
 fun extractRepeats(list: List<String>): Map<String, Int> {
-    val group = list.groupBy({it}, {list.indexOf(it)})
-    val map = mutableMapOf<String, Int>()
-    for ((key, element) in group) {
-        if (element.size > 1) map[key] = element.size
-    }
+    val group = list.groupBy({ it }, { list.indexOf(it) }).filter { (_, value) -> value.size > 1 }
+    var map = mutableMapOf<String, Int>()
+    for ((key, value) in group) map[key] = value.size
     return map
+
 }
+
 
 /**
  * Средняя (3 балла)
