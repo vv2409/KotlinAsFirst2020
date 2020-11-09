@@ -234,7 +234,7 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
 fun extractRepeats(list: List<String>): Map<String, Int> {
-    val group = list.groupBy({ it }, { list.indexOf(it) }).filter { (_, value) -> value.size > 1 }
+    val group = list.groupBy { it }.filter { (_, value) -> value.size > 1 }
     var map = mutableMapOf<String, Int>()
     for ((key, value) in group) map[key] = value.size
     return map
