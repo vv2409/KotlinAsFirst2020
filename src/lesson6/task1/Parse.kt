@@ -104,7 +104,7 @@ fun dateStrToDigit(str: String): String {
             val month = months[parts[1]]
             val c = parts[0].toInt()
             val day = days(month, year, c)
-            if (day == 0) "" else String.format("%02d.%02d.%02d", day, month, year)
+            if (day == 0) "" else String.format("%02d.%02d.%d", day, month, year)
         } else ""
     } catch (e: NullPointerException) {
         return ""
