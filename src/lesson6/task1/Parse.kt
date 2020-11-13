@@ -74,7 +74,43 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun days(month: Int?, year: Int, c: Int): Int {
+    val d = mapOf(1 to 31,
+        2 to 28,
+        3 to 31,
+        4 to 30,
+        5 to 31,
+        6 to 30,
+        7 to 31,
+        8 to 31,
+        9 to 30,
+        10 to 31,
+        11 to 30,
+        12 to 31)
+    return if (month!! > 12)
+        0
+    else
+        if (month == 2 && (year % 400 == 0 || year % 100 != 0 && year % 4 == 0) && c <= 29) c
+        else if (c > d[month]!!) 0 else c
+}
+
+fun dateStrToDigit(str: String): String {
+    val parts = str.split(" ")
+    val months = mapOf("января" to 1, "февраля" to 2, "марта" to 3, "апреля" to 4, "мая" to 5, "июня" to 6,
+        "июля" to 7, "августа" to 8, "сентября" to 9, "октября" to 10, "ноября" to 11, "декабря" to 12)
+    try {
+        return if (parts.size == 3) {
+            val year = parts[2].toInt()
+            val month = months[parts[1]]
+            val c = parts[0].toInt()
+            val day = days(month, year, c)
+            if (day == 0) "" else String.format("%02d.%02d.%02d", day, month, year)
+        } else ""
+    } catch (e: NullPointerException) {
+        return ""
+    }
+}
+
 
 /**
  * Средняя (4 балла)
@@ -102,7 +138,12 @@ fun dateDigitToStr(digital: String): String = TODO()
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    val newphone = phone.replace(" ", "").replace("-", "")
+    return if (newphone.matches(Regex("""^\+?\d*\(?\d+\)?\d*""")))
+        newphone.replace("(", "").replace(")", "")
+    else ""
+}
 
 /**
  * Средняя (5 баллов)
@@ -138,7 +179,18 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    if (!expression.matches(Regex("""^(\d+)( [+-] (\d+))*"""))) throw IllegalArgumentException()
+    val list = expression.split(" ")
+    var simvol = "+"
+    var res = 0
+    for (value in list) {
+        if (value == "+" || value == "-") simvol = value else {
+            if (simvol == "-") res -= value.toInt() else res += value.toInt()
+        }
+    }
+    return res
+}
 
 /**
  * Сложная (6 баллов)
@@ -149,20 +201,40 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val st = str.toLowerCase().split(" ")
+    var index = 0
+    for (i in 0 until st.size - 1) {
+        if (st[i] == st[i + 1]) {
+            return index
+        }
+        index += st[i].length + 1
+    }
+    return -1
+}
 
 /**
  * Сложная (6 баллов)
  *
  * Строка содержит названия товаров и цены на них в формате вида
  * "Хлеб 39.9; Молоко 62; Курица 184.0; Конфеты 89.9".
- * То есть, название товара отделено от цены пробелом,
+ * То есть, название товар а отделено от цены пробелом,
  * а цена отделена от названия следующего товара точкой с запятой и пробелом.
  * Вернуть название самого дорогого товара в списке (в примере это Курица),
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String =
+    if (description.matches(Regex("""([^\s]+\s\d+(\.\d+)?;\s)*[^\s]+\s\d+(\.\d+)?${'$'}"""))) {
+        val list = description.split("; ")
+        var map = mutableMapOf<String, Double>()
+        for (l in list) {
+            val para = l.split(" ")
+            map[para[0]] = para[1].toDouble()
+        }
+        map.maxByOrNull { it.value }!!.key
+    } else ""
+
 
 /**
  * Сложная (6 баллов)
