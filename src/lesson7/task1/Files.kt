@@ -64,13 +64,12 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Все остальные строки должны быть перенесены без изменений, включая пустые строки.
  * Подчёркивание в середине и/или в конце строк значения не имеет.
  */
-fun deleteMarked(inputName: String, outputName: String) = FileWriter(outputName)
-    .use {
-        for (line in File(inputName).readLines()) if (!line.startsWith("_")) {
-            it.write(line)
-            it.appendLine()
-        }
+fun deleteMarked(inputName: String, outputName: String) = FileWriter(outputName).use {
+    for (line in File(inputName).readLines()) if (!line.startsWith("_")) {
+        it.write(line)
+        it.appendLine()
     }
+}
 
 /**
  * Средняя (14 баллов)

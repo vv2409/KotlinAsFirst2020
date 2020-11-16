@@ -78,7 +78,6 @@ fun main() {
  */
 fun days(month: Int, year: Int, c: Int): Int = if (month <= 12 && daysInMonth(month, year) >= c) c else 0
 
-
 fun dateStrToDigit(str: String): String {
     val parts = str.split(" ")
     val months = mapOf("января" to 1, "февраля" to 2, "марта" to 3, "апреля" to 4, "мая" to 5, "июня" to 6,
