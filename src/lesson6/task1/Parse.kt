@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import lesson2.task2.daysInMonth
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -74,25 +76,8 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun days(month: Int?, year: Int, c: Int): Int {
-    val d = mapOf(1 to 31,
-        2 to 28,
-        3 to 31,
-        4 to 30,
-        5 to 31,
-        6 to 30,
-        7 to 31,
-        8 to 31,
-        9 to 30,
-        10 to 31,
-        11 to 30,
-        12 to 31)
-    return if (month!! > 12)
-        0
-    else
-        if (month == 2 && (year % 400 == 0 || year % 100 != 0 && year % 4 == 0) && c <= 29) c
-        else if (c > d[month]!!) 0 else c
-}
+fun days(month: Int, year: Int, c: Int): Int = if (month <= 12 && daysInMonth(month, year) >= c) c else 0
+
 
 fun dateStrToDigit(str: String): String {
     val parts = str.split(" ")
@@ -101,15 +86,14 @@ fun dateStrToDigit(str: String): String {
     return try {
         if (parts.size == 3) {
             val year = parts[2].toInt()
-            val month = months[parts[1]]
+            val month: Int = months[parts[1]]!!
             val c = parts[0].toInt()
             val day = days(month, year, c)
             if (day == 0) "" else String.format("%02d.%02d.%d", day, month, year)
         } else ""
     } catch (e: NullPointerException) {
         ""
-    }
-    catch (e: NumberFormatException) {
+    } catch (e: NumberFormatException) {
         ""
     }
 }
@@ -185,11 +169,11 @@ fun bestHighJump(jumps: String): Int = TODO()
 fun plusMinus(expression: String): Int {
     if (!expression.matches(Regex("""^(\d+)( [+-] (\d+))*"""))) throw IllegalArgumentException()
     val list = expression.split(" ")
-    var simvol = "+"
+    var symbol = "+"
     var res = 0
     for (value in list) {
-        if (value == "+" || value == "-") simvol = value else {
-            if (simvol == "-") res -= value.toInt() else res += value.toInt()
+        if (value == "+" || value == "-") symbol = value else {
+            if (symbol == "-") res -= value.toInt() else res += value.toInt()
         }
     }
     return res
@@ -232,8 +216,8 @@ fun mostExpensive(description: String): String =
         val list = description.split("; ")
         var map = mutableMapOf<String, Double>()
         for (l in list) {
-            val para = l.split(" ")
-            map[para[0]] = para[1].toDouble()
+            val pair = l.split(" ")
+            map[pair[0]] = pair[1].toDouble()
         }
         map.maxByOrNull { it.value }!!.key
     } else ""
