@@ -3,8 +3,11 @@
 package lesson7.task1
 
 import lesson3.task1.digitNumber
+import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
+import kotlin.math.log10
+import kotlin.math.pow
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -287,8 +290,74 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    var w = File(outputName).bufferedWriter()
+    with(w) {
+        write("<html>")
+        newLine()
+        write("<body>")
+        newLine()
+        write("<p>")
+        newLine()
+    }
+    var c = 0
+    for (line in File(inputName).readLines()) {
+        if (line == "" && c == 0) with(w) {
+            write("</p>")
+            newLine()
+            write("<p>")
+            c++
+        } else {
+            c = 0
+            var i = 0
+            var k = 0
+            var g = 0
+            var p = 0
+            while (i < line.length) {
+                if (line[i] == '*' || line[i] == '~') {
+                    if (line[i] == '*' && line[i + 1] == '*') if (g % 2 != 0) {
+                        i++
+                        g++
+                        w.write("</b>")
+                    } else {
+                        i++
+                        g++
+                        w.write("<b>")
+                    }
+                    else if (line[i] == '*') if (k % 2 != 0) {
+                        k++
+                        w.write("</i>")
+                    } else {
+                        k++
+                        w.write("<i>")
+                    }
+                    if (line[i] == '~' && line[i + 1] == '~') if (p % 2 != 0) {
+                        i++
+                        p++
+                        w.write("</s>")
+                    } else {
+                        i++
+                        p++
+                        w.write("<s>")
+                    }
+                } else {
+                    val element = line[i].toString()
+                    w.write(element)
+                }
+                i++
+            }
+        }
+        w.newLine()
+    }
+    with(w) {
+        write("</p>")
+        newLine()
+        write("</body>")
+        newLine()
+        write("</html>")
+        close()
+    }
 }
+
 
 /**
  * Сложная (23 балла)
@@ -428,6 +497,25 @@ fun markdownToHtml(inputName: String, outputName: String) {
 2350
  *
  */
+fun indent(c: Int): String {
+    return buildString {
+        repeat(c) {
+            append(" ")
+
+        }
+    }
+}
+
+fun dash(c: Int): String {
+    return buildString {
+        repeat(c) {
+            append("-")
+
+        }
+    }
+}
+
+
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     var writer = File(outputName).bufferedWriter()
     val res = (lhv * rhv).toString()
@@ -435,34 +523,22 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     val list2 = rhv.toString()
     val c = res.length + 1
     var d = c - list1.length
-    while (d > 0) {
-        writer.write(" ")
-        d -= 1
-    }
+    writer.write(indent(d))
     writer.write(list1)
     writer.newLine()
     writer.write("*")
     var a = c - list2.length - 1
-    while (a > 0) {
-        writer.write(" ")
-        a--
-    }
+    writer.write(indent(a))
     writer.write(list2)
     writer.newLine()
     var k = c
-    while (k > 0) {
-        writer.write("-")
-        k--
-    }
+    writer.write(dash(k))
     writer.newLine()
     var i = rhv
     var p = i % 10
     val j = (p * lhv).toString()
     var f = c - j.length
-    while (f > 0) {
-        writer.write(" ")
-        f--
-    }
+    writer.write(indent(f))
     writer.write("$j")
     i /= 10
     writer.newLine()
@@ -472,20 +548,14 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
         writer.write("+")
         val j = (p * lhv).toString()
         var t = c - j.length - 1 - s
-        while (t > 0) {
-            writer.write(" ")
-            t--
-        }
+        writer.write(indent(t))
         writer.write("$j")
         writer.newLine()
         i /= 10
         s++
     }
     k = c
-    while (k > 0) {
-        writer.write("-")
-        k--
-    }
+    writer.write(dash(k))
     writer.newLine()
     writer.write(" $res")
     writer.close()
@@ -512,8 +582,55 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
  */
+
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    var w = File(outputName).bufferedWriter()
+    w.write(" $lhv | $rhv")
+    w.newLine()
+    var res = lhv / rhv
+    var countRes = digitNumber(res)
+    var extact = rhv * (res / 10.0.pow(countRes - 1)).toInt()
+    w.write("-$extact")
+    var k = digitNumber(lhv) - digitNumber(extact) + 3
+    w.write(indent(k))
+    w.write("$res")
+    w.newLine()
+    res %= 10.0.pow(countRes - 1).toInt()
+    countRes--
+    var line = digitNumber(extact) + 1
+    w.write(dash(line))
+    w.newLine()
+    var numerator = lhv
+    k = digitNumber(numerator) - digitNumber(extact)
+    line = digitNumber(extact) + 1 - digitNumber(numerator / (10.0.pow(k).toInt()) - extact)
+    w.write(indent(line))
+    var void = 0
+    var q = numerator / (10.0.pow(k).toInt())
+    while (countRes > 0) {
+        var remains = q - extact
+        w.write("$remains")
+        numerator = numerator % 10.0.pow(k).toInt() + remains * 10.0.pow(k).toInt()
+        k--
+        var demolition = numerator / 10.0.pow(k).toInt() % 10
+        w.write("$demolition")
+        w.newLine()
+        q = remains * 10 + demolition
+        extact = rhv * ((res / 10.0.pow(countRes - 1)) % 10).toInt()
+        if ((digitNumber(extact) == digitNumber(q)) && (remains != 0)) line--
+        w.write(indent(line))
+        w.write("-$extact")
+        w.newLine()
+        w.write(indent(line))
+        void = digitNumber(extact) + 1
+        w.write(dash(void))
+        w.newLine()
+        line += void - digitNumber(q - extact)
+        w.write(indent(line))
+        countRes--
+    }
+    var remains = numerator / (10.0.pow(k).toInt()) - extact
+    w.write("$remains")
+    w.close()
 }
 
 
