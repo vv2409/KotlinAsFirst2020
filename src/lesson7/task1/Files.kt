@@ -300,6 +300,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         newLine()
     }
     var c = 0
+    var k1 = 0
+    var g1 = 0
+    var p1 = 0
     for (line in File(inputName).readLines()) {
         if (line == "" && c == 0) with(w) {
             write("</p>")
@@ -314,7 +317,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             var p = 0
             while (i < line.length) {
                 if (line[i] == '*' || line[i] == '~') {
-                    if (line[i] == '*' && line[i + 1] == '*') if (g % 2 != 0) {
+                    if (line[i] == '*' && i + 1 < line.length) if (line[i + 1] == '*') if (g % 2 != 0) {
                         i++
                         g++
                         w.write("</b>")
@@ -326,10 +329,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     else if (line[i] == '*') if (k % 2 != 0) {
                         k++
                         w.write("</i>")
-                    } else {
+                    } else if (i + 1 < line.length) {
                         k++
                         w.write("<i>")
-                    }
+                    } else k1++
                     if (line[i] == '~' && line[i + 1] == '~') if (p % 2 != 0) {
                         i++
                         p++
@@ -602,11 +605,11 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     w.newLine()
     var numerator = lhv
     k = digitNumber(numerator) - digitNumber(extact)
-    line = digitNumber(extact) + 1 - digitNumber(numerator / (10.0.pow(k).toInt()) - extact)
-    w.write(indent(line))
     var void = 0
     var q = numerator / (10.0.pow(k).toInt())
+    line += void - digitNumber(q - extact)
     while (countRes > 0) {
+        w.write(indent(line))
         var remains = q - extact
         w.write("$remains")
         numerator = numerator % 10.0.pow(k).toInt() + remains * 10.0.pow(k).toInt()
@@ -616,18 +619,22 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         w.newLine()
         q = remains * 10 + demolition
         extact = rhv * ((res / 10.0.pow(countRes - 1)) % 10).toInt()
-        if ((digitNumber(extact) == digitNumber(q)) && (remains != 0)) line--
+        val line2 = line
+        line += digitNumber(q) - digitNumber(extact) - 1
+        if ((digitNumber(extact) == digitNumber(q)) && (remains == 0)) line++
         w.write(indent(line))
         w.write("-$extact")
         w.newLine()
+        if (digitNumber(extact) + 1 <= digitNumber(q)) line = line2
         w.write(indent(line))
-        void = digitNumber(extact) + 1
+        void = if (digitNumber(extact) + 1 > digitNumber(q)) digitNumber(extact) + 1 else
+            digitNumber(q)
         w.write(dash(void))
         w.newLine()
         line += void - digitNumber(q - extact)
-        w.write(indent(line))
         countRes--
     }
+    w.write(indent(line))
     var remains = numerator / (10.0.pow(k).toInt()) - extact
     w.write("$remains")
     w.close()
