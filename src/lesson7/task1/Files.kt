@@ -6,6 +6,7 @@ import lesson3.task1.digitNumber
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
+import java.lang.StringBuilder
 import kotlin.math.log10
 import kotlin.math.pow
 
@@ -289,72 +290,71 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    var w = File(outputName).bufferedWriter()
-    with(w) {
-        write("<html>")
-        newLine()
-        write("<body>")
-        newLine()
-        write("<p>")
-        newLine()
-    }
-    var c = 0
-    for (line in File(inputName).readLines()) {
-        if (line == "" && c == 0) with(w) {
-            write("</p>")
-            newLine()
-            write("<p>")
-            c++
-        } else {
-            c = 0
-            var i = 0
-            var k = 0
-            var g = 0
-            var p = 0
-            while (i < line.length) {
-                if (line[i] == '*' || line[i] == '~') {
-                    if (line[i] == '*' && line[i + 1] == '*') if (g % 2 != 0) {
-                        i++
-                        g++
-                        w.write("</b>")
-                    } else {
-                        i++
-                        g++
-                        w.write("<b>")
-                    }
-                    else if (line[i] == '*') if (k % 2 != 0) {
-                        k++
-                        w.write("</i>")
-                    } else {
-                        k++
-                        w.write("<i>")
-                    }
-                    if (line[i] == '~' && line[i + 1] == '~') if (p % 2 != 0) {
-                        i++
-                        p++
-                        w.write("</s>")
-                    } else {
-                        i++
-                        p++
-                        w.write("<s>")
-                    }
-                } else {
-                    val element = line[i].toString()
-                    w.write(element)
-                }
-                i++
+    var str = buildString {
+        append("<html><body><p>")
+        var c = 0
+        for (line in File(inputName).readLines()) {
+            if (line.isEmpty() && c == 0) {
+                append("</p><p>")
+                c++
+            } else {
+                c == 0
+                append(line)
             }
         }
-        w.newLine()
+        append(("</p></body></html>"))
     }
-    with(w) {
-        write("</p>")
-        newLine()
-        write("</body>")
-        newLine()
-        write("</html>")
-        close()
+    File(outputName).bufferedWriter().use {
+        var list = mutableListOf<Char>()
+        var i = 0
+        var b = 0
+        var s = 0
+        for (element in str) {
+            if (list.isEmpty()) if (element == '*' || element == '~') list.add(element) else it.write("$element")
+            else {
+                if (list[list.lastIndex] == '*') {
+                    if (element == '*') if (b % 2 != 0) {
+                        it.write("</b>")
+                        b++
+                        list.removeLast()
+                    } else {
+                        it.write("<b>")
+                        b++
+                        list.removeLast()
+                    } else if (i % 2 != 0) {
+                        list.removeLast()
+                        if (element != '~') it.write("</i>$element") else {
+                            it.write("</i>")
+                            list.add(element)
+                        }
+                        i++
+                    } else {
+                        list.removeLast()
+                        if (element != '~') it.write("<i>$element") else {
+                            it.write("<i>")
+                            list.add(element)
+                        }
+                        i++
+                    }
+                } else if (element == '~') {
+                    if (s % 2 != 0) {
+                        it.write("</s>")
+                        s++
+                        list.removeLast()
+                    } else {
+                        it.write("<s>")
+                        s++
+                        list.removeLast()
+                    }
+                } else {
+                    val h = list[list.lastIndex]
+                    it.write("$h$element")
+                    list.removeLast()
+                }
+            }
+        }
     }
 }
 
@@ -585,57 +585,79 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
 
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     var w = File(outputName).bufferedWriter()
-    w.write(" $lhv | $rhv")
-    w.newLine()
     var res = lhv / rhv
+    var line = 1
     var countRes = digitNumber(res)
     var extact = rhv * (res / 10.0.pow(countRes - 1)).toInt()
-    w.write("-$extact")
-    var k = digitNumber(lhv) - digitNumber(extact) + 3
-    w.write(indent(k))
-    w.write("$res")
-    w.newLine()
-    res %= 10.0.pow(countRes - 1).toInt()
-    countRes--
-    var line = digitNumber(extact) + 1
-    w.write(dash(line))
-    w.newLine()
-    var numerator = lhv
-    k = digitNumber(numerator) - digitNumber(extact)
-    var void = 0
-    var q = numerator / (10.0.pow(k).toInt())
-    line += void - digitNumber(q - extact)
-    while (countRes > 0) {
+
+    if (extact == 0 && digitNumber(lhv) != 1) {
+        line = digitNumber(lhv) - 2
+        with(w) {
+            write("$lhv | $rhv\n")
+            write(indent(line) + "-$extact" + indent(3) + "$res\n")
+            write(dash(digitNumber(lhv)))
+            newLine()
+            write("$lhv")
+        }
+    } else {
+        var numerator = lhv
+        var k = digitNumber(numerator) - digitNumber(extact)
+        var q = numerator / (10.0.pow(k).toInt())
+        if (q < extact) {
+            k--
+            q = numerator / (10.0.pow(k).toInt())
+            line--
+        }
         w.write(indent(line))
-        var remains = q - extact
-        w.write("$remains")
-        numerator = numerator % 10.0.pow(k).toInt() + remains * 10.0.pow(k).toInt()
-        k--
-        var demolition = numerator / 10.0.pow(k).toInt() % 10
-        w.write("$demolition")
+        w.write("$lhv | $rhv")
         w.newLine()
-        q = remains * 10 + demolition
-        extact = rhv * ((res / 10.0.pow(countRes - 1)) % 10).toInt()
-        val line2 = line
-        line += digitNumber(q) - digitNumber(extact) - 1
-        if ((digitNumber(extact) == digitNumber(q)) && (remains == 0)) line++
-        w.write(indent(line))
         w.write("-$extact")
+        val l = digitNumber(lhv) - digitNumber(extact) + 3
+        w.write(indent(l))
+        w.write("$res")
         w.newLine()
-        if (digitNumber(extact) + 1 <= digitNumber(q)) line = line2
-        w.write(indent(line))
-        void = if (digitNumber(extact) + 1 > digitNumber(q)) digitNumber(extact) + 1 else
+        res %= 10.0.pow(countRes - 1).toInt()
+        countRes--
+        line = digitNumber(extact) + 1
+        var void = if (digitNumber(extact) + 1 > digitNumber(q)) digitNumber(extact) + 1 else
             digitNumber(q)
         w.write(dash(void))
         w.newLine()
+        void = 0
         line += void - digitNumber(q - extact)
-        countRes--
+        while (countRes > 0) {
+            w.write(indent(line))
+            var remains = q - extact
+            w.write("$remains")
+            numerator = numerator % 10.0.pow(k).toInt() + remains * 10.0.pow(k).toInt()
+            k--
+            var demolition = numerator / 10.0.pow(k).toInt() % 10
+            w.write("$demolition")
+            w.newLine()
+            q = remains * 10 + demolition
+            extact = rhv * ((res / 10.0.pow(countRes - 1)) % 10).toInt()
+            val line2 = line
+            line += digitNumber(q) - digitNumber(extact) - 1
+            if ((digitNumber(extact) == digitNumber(q)) && (remains == 0)) line++
+            w.write(indent(line))
+            w.write("-$extact")
+            w.newLine()
+            if (digitNumber(extact) + 1 <= digitNumber(q)) line = line2
+            w.write(indent(line))
+            void = if (digitNumber(extact) + 1 > digitNumber(q)) digitNumber(extact) + 1 else
+                digitNumber(q)
+            w.write(dash(void))
+            w.newLine()
+            line += void - digitNumber(q - extact)
+            countRes--
+        }
+        w.write(indent(line))
+        var remains = numerator / (10.0.pow(k).toInt()) - extact
+        w.write("$remains")
     }
-    w.write(indent(line))
-    var remains = numerator / (10.0.pow(k).toInt()) - extact
-    w.write("$remains")
     w.close()
 }
+
 
 
 
