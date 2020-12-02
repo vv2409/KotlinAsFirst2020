@@ -306,52 +306,85 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         }
         append(("</p></body></html>"))
     }
+    var i = 0
+    var b = 0
+    var s = 0
     File(outputName).bufferedWriter().use {
+        var x = ""
         var list = mutableListOf<Char>()
-        var i = 0
-        var b = 0
-        var s = 0
         for (element in str) {
-            if (list.isEmpty()) if (element == '*' || element == '~') list.add(element) else it.write("$element")
+            if (list.isEmpty()) if (element == '*' || element == '~') list.add(element) else x += ("$element")
             else {
                 if (list[list.lastIndex] == '*') {
                     if (element == '*') if (b % 2 != 0) {
-                        it.write("</b>")
+                        x += "</b>"
                         b++
+                        it.write(x)
+                        x = ""
                         list.removeLast()
                     } else {
-                        it.write("<b>")
+                        x += "<b>"
                         b++
                         list.removeLast()
                     } else if (i % 2 != 0) {
                         list.removeLast()
-                        if (element != '~') it.write("</i>$element") else {
-                            it.write("</i>")
+                        if (element != '~') x += "</i>$element" else {
+                            x += "</i>"
+                            it.write(x)
+                            x = ""
                             list.add(element)
                         }
                         i++
                     } else {
                         list.removeLast()
-                        if (element != '~') it.write("<i>$element") else {
-                            it.write("<i>")
+                        if (element != '~') x += "<i>$element" else {
+                            x += "<i>"
                             list.add(element)
                         }
                         i++
                     }
                 } else if (element == '~') {
                     if (s % 2 != 0) {
-                        it.write("</s>")
+                        x += "</s>"
                         s++
+                        it.write(x)
+                        x = ""
                         list.removeLast()
                     } else {
-                        it.write("<s>")
+                        x += "<s>"
                         s++
                         list.removeLast()
                     }
                 } else {
                     val h = list[list.lastIndex]
-                    it.write("$h$element")
+                    x += "$h$element"
                     list.removeLast()
+                }
+            }
+        }
+        if (b % 2 == 0 || i % 2 == 0 || s % 2 == 0) it.write(x) else {
+            var j = 0
+            while (j in 0 until x.length - 1) {
+                if (b % 2 != 0) {
+                    if (x[j] == '<' && x[j + 1] == 'b' && x[j + 2] == '>') {
+                        it.write("<i></i>")
+                        b++
+                        j += 3
+                    }
+                } else if (i % 2 != 0) {
+                    if (x[j] == '<' && x[j + 1] == 'i' && x[j + 2] == '>') {
+                        it.write("*")
+                        j += 3
+                        i++
+                    }
+                } else if (s % 2 != 0) if (x[j] == '<' && x[j + 1] == 's' && x[j + 2] == '>') {
+                    it.write("~~")
+                    s++
+                    j += 3
+                } else {
+                    val h = x[j].toString()
+                    it.write(h)
+                    j++
                 }
             }
         }
@@ -612,7 +645,8 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         w.write("$lhv | $rhv")
         w.newLine()
         w.write("-$extact")
-        val l = digitNumber(lhv) - digitNumber(extact) + 3
+        val l = if (digitNumber(res) == 1) 3
+        else digitNumber(lhv) - digitNumber(extact) + 3
         w.write(indent(l))
         w.write("$res")
         w.newLine()

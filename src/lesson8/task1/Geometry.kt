@@ -256,8 +256,11 @@ fun minContainingCircle(vararg points: Point): Circle {
     var p1 = segment.end
     var p2 = points[0]
     var p3 = points[0]
-    var center = circleByDiameter(segment).center
-    var radius = circleByDiameter(segment).radius
+    for (i in 0 until 2) {
+        if (points[i] != p0 && points[i] != p1) p2 = points[i]
+    }
+    var center = circleByThreePoints(p0, p1, p2).center
+    var radius = circleByThreePoints(p0, p1, p2).radius
     var list = mutableListOf<Point>()
     for (i in points.indices){
         if (points[i].distance(center) > radius)
