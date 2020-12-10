@@ -18,7 +18,10 @@ data class Point(val x: Double, val y: Double) {
      * Рассчитать (по известной формуле) расстояние между двумя точками
      */
     fun distance(other: Point): Double = sqrt(sqr(x - other.x) + sqr(y - other.y))
+    fun belong(c: Circle): Boolean = c.center.distance(this) <= c.radius
+
 }
+
 
 /**
  * Треугольник, заданный тремя точками (a, b, c, см. constructor ниже).
@@ -254,31 +257,36 @@ fun minContainingCircle(vararg points: Point): Circle {
     val segment = diameter(*points)
     var p0 = segment.begin
     var p1 = segment.end
-    var p2 = points[0]
-    var p3 = points[0]
-    for (i in 0 until 2) {
-        if (points[i] != p0 && points[i] != p1) p2 = points[i]
+    var a = points.toMutableSet()
+    var b = mutableSetOf<Point>()
+    fun point(x: Point): Point {
+        a.remove(x)
+        b.add(x)
+        return x
     }
-    var center = circleByThreePoints(p0, p1, p2).center
-    var radius = circleByThreePoints(p0, p1, p2).radius
-    var list = mutableListOf<Point>()
-    for (i in points.indices){
-        if (points[i].distance(center) > radius)
-            list.add(points[i])
-    }
-    for (i in list.indices) {
-        p3 = list[i]
-        center = circleByThreePoints(p0, p1, p3).center
-        radius = circleByThreePoints(p0, p1, p3).radius
-        var list2 = mutableListOf<Point>()
-        for (i in points.indices){
-            if (points[i].distance(center) > radius)
-                list2.add(points[i])
+    var circle = circleByDiameter(segment)
+    while (a.isNotEmpty()) {
+        val farther = point(a.random())
+        if (circle.contains(farther))
+            continue
+        val c1 = circleByDiameter(Segment(p0, farther))
+        val c2 = circleByDiameter(Segment(p1, farther))
+        val c3 = circleByThreePoints(p0, p1, farther)
+        circle = when {
+            b.all { it.belong(c1) } -> {
+                p1 = farther
+                c1
+            }
+            b.all { it.belong(c2) } -> {
+                p0 = farther
+                c2
+            }
+            b.all { it.belong(c3) } -> {
+                c3
+            }
+            else -> minContainingCircle(*b.toTypedArray())
         }
-        if (list2.size == 0) p2 = p3
     }
-    center = circleByThreePoints(p0, p1, p2).center
-    radius = circleByThreePoints(p0, p1, p2).radius
-    return Circle(center, radius)
+    return circle
 }
 

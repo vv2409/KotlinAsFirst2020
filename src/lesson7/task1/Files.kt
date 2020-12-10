@@ -292,7 +292,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  */
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
- TODO()
+TODO()
 }
 
 
@@ -453,50 +453,49 @@ fun dash(c: Int): String {
 }
 
 
-fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    var writer = File(outputName).bufferedWriter()
-    val res = (lhv * rhv).toString()
-    val list1 = lhv.toString()
-    val list2 = rhv.toString()
-    val c = res.length + 1
-    var d = c - list1.length
-    writer.write(indent(d))
-    writer.write(list1)
-    writer.newLine()
-    writer.write("*")
-    var a = c - list2.length - 1
-    writer.write(indent(a))
-    writer.write(list2)
-    writer.newLine()
-    var k = c
-    writer.write(dash(k))
-    writer.newLine()
-    var i = rhv
-    var p = i % 10
-    val j = (p * lhv).toString()
-    var f = c - j.length
-    writer.write(indent(f))
-    writer.write("$j")
-    i /= 10
-    writer.newLine()
-    var s = 1
-    while (i > 0) {
-        p = i % 10
-        writer.write("+")
-        val j = (p * lhv).toString()
-        var t = c - j.length - 1 - s
-        writer.write(indent(t))
-        writer.write("$j")
+fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) =
+    File(outputName).bufferedWriter().use { writer ->
+        val res = (lhv * rhv).toString()
+        val list1 = lhv.toString()
+        val list2 = rhv.toString()
+        val c = res.length + 1
+        var d = c - list1.length
+        writer.write(indent(d))
+        writer.write(list1)
         writer.newLine()
+        writer.write("*")
+        var a = c - list2.length - 1
+        writer.write(indent(a))
+        writer.write(list2)
+        writer.newLine()
+        var k = c
+        writer.write(dash(k))
+        writer.newLine()
+        var i = rhv
+        var p = i % 10
+        val j = (p * lhv).toString()
+        var f = c - j.length
+        writer.write(indent(f))
+        writer.write("$j")
         i /= 10
-        s++
+        writer.newLine()
+        var s = 1
+        while (i > 0) {
+            p = i % 10
+            writer.write("+")
+            val j = (p * lhv).toString()
+            var t = c - j.length - 1 - s
+            writer.write(indent(t))
+            writer.write("$j")
+            writer.newLine()
+            i /= 10
+            s++
+        }
+        k = c
+        writer.write(dash(k))
+        writer.newLine()
+        writer.write(" $res")
     }
-    k = c
-    writer.write(dash(k))
-    writer.newLine()
-    writer.write(" $res")
-    writer.close()
-}
 
 
 /**
@@ -520,8 +519,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  *
  */
 
-fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    var w = File(outputName).bufferedWriter()
+fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) = File(outputName).bufferedWriter().use { w ->
     var res = lhv / rhv
     var line = 1
     var countRes = digitNumber(res)
@@ -593,7 +591,6 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         var remains = numerator / (10.0.pow(k).toInt()) - extact
         w.write("$remains")
     }
-    w.close()
 }
 
 
