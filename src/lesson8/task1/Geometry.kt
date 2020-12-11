@@ -265,26 +265,32 @@ fun minContainingCircle(vararg points: Point): Circle {
         return x
     }
     var circle = circleByDiameter(segment)
+    var p3 = false
     while (a.isNotEmpty()) {
         val farther = point(a.random())
         if (circle.contains(farther))
             continue
-        val c1 = circleByDiameter(Segment(p0, farther))
-        val c2 = circleByDiameter(Segment(p1, farther))
-        val c3 = circleByThreePoints(p0, p1, farther)
-        circle = when {
-            b.all { it.belong(c1) } -> {
-                p1 = farther
-                c1
+        circle = if (p3)
+            minContainingCircle(*b.toTypedArray())
+        else {
+            val c1 = circleByDiameter(Segment(p0, farther))
+            val c2 = circleByDiameter(Segment(p1, farther))
+            val c3 = circleByThreePoints(p0, p1, farther)
+            when {
+                b.all { it.belong(c1) } -> {
+                    p1 = farther
+                    c1
+                }
+                b.all { it.belong(c2) } -> {
+                    p0 = farther
+                    c2
+                }
+                b.all { it.belong(c3) } -> {
+                    p3 = true
+                    c3
+                }
+                else -> minContainingCircle(*b.toTypedArray())
             }
-            b.all { it.belong(c2) } -> {
-                p0 = farther
-                c2
-            }
-            b.all { it.belong(c3) } -> {
-                c3
-            }
-            else -> minContainingCircle(*b.toTypedArray())
         }
     }
     return circle
