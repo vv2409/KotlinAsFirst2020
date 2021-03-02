@@ -49,7 +49,10 @@ class PolynomTest {
     operator fun unaryMinus() {
         val p = Polynom(1.0, -1.0, 2.0)
         val r = Polynom(-1.0, 1.0, -2.0)
+        val p1 =Polynom(1.0, 3.0, 2.0)
+        val r1 =Polynom(-1.0, -3.0, -2.0)
         assertApproxEquals(r, -p, 1e-11)
+        assertApproxEquals(r1, -p1, 1e-11)
     }
 
     @Test
@@ -58,8 +61,12 @@ class PolynomTest {
         val p1 = Polynom(1.0, -2.0, -1.0, 4.0)
         val p2 = Polynom(1.0, 3.0, 2.0)
         val r = Polynom(1.0, -3.0, -4.0, 2.0)
-        assertApproxEquals(r, p1 - p2, 1e-10)
-        assertApproxEquals(-r, p2 - p1, 1e-10)
+        val p = Polynom(1.0, -2.0, -1.0, 4.0)
+        val v = Polynom(1.0, 3.0, 2.0, 0.0)
+        val res = Polynom(-5.0, -3.0, 4.0)
+        assertApproxEquals(res, p - v, 1e-10)
+        /**assertApproxEquals(r, p1 - p2, 1e-10)
+        assertApproxEquals(-r, p2 - p1, 1e-10)*/
     }
 
     @Test
@@ -68,8 +75,17 @@ class PolynomTest {
         val p1 = Polynom(1.0, -2.0, -1.0, 4.0)
         val p2 = Polynom(1.0, 3.0, 2.0)
         val r = Polynom(1.0, 1.0, -5.0, -3.0, 10.0, 8.0)
+        val p3 = Polynom(1.0, 1.0, -1.0, 1.0, 1.0, 5.0)
+        var p4 = Polynom(1.0, 1.0, 0.0, -8.0)
+        var r2 = Polynom(1.0, 2.0, 0.0, -8.0, -6.0, 14.0, -3.0, -8.0, -40.0)
+        var q = Polynom(1.0, 3.0, 2.0)
+        var w = Polynom(1.0, 0.0)
+        val res = Polynom(1.0,3.0,2.0, 0.0)
+        assertApproxEquals(res, q * w, 1e-10)
         assertApproxEquals(r, p1 * p2, 1e-10)
         assertApproxEquals(r, p2 * p1, 1e-10)
+        assertApproxEquals(r2, p4 * p3, 1e-10)
+
     }
 
     @Test

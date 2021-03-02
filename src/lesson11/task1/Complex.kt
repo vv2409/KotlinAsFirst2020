@@ -12,33 +12,18 @@ package lesson11.task1
  *
  * Аргументы конструктора -- вещественная и мнимая часть числа.
  */
-fun strComplex(s: String): Complex {
+fun Complex(s: String): Complex {
     var re = 0.0
     var im = 0.0
-    when {
-        s == "-i" -> im = -1.0
-        s == "i" -> im = 1.0
-        s == "+i" -> im = 1.0
-        s.matches(Regex("""^-?\d+(\.\d+)*$""")) ->
-            re = s.toDouble()
-        s.matches(Regex("""^-?\d+(\.\d+)*i$""")) ->
-            im = s.substring(0 until s.lastIndex).toDouble()
-        s.matches(Regex("""^-?\d+(\.\d+)*[+-]\d+(\.\d+)*i$""")) -> {
-            val j = s.indexOf('+', 1)
-            val k = s.indexOf('-', 1)
-            val i = if (j > k) j else k
-            re = s.substring(0 until i).toDouble()
-            im = s.substring(i until s.lastIndex).toDouble()
-        }
-        s.matches(Regex("""^-?\d+(\.\d+)*[+-]*i$""")) -> {
-            val j = s.indexOf('+', 1)
-            val k = s.indexOf('-', 1)
-            val i = if (j > k) j else k
-            re = s.substring(0 until i).toDouble()
-            im = if (j > k) 1.0 else -1.0
 
-        }
-        else -> throw IllegalStateException()
+    val match = Regex("""([+|-]?[0-9.]+)?(?![i])([+|-]?[0-9.]*i)?""")
+        .find(s) ?: throw IllegalArgumentException("Invalid format")
+    re = if (match.groupValues[1] == "") 0.0 else match.groupValues[1].toDouble()
+    im = when {
+        match.groupValues[2] == "-i" -> -1.0
+        match.groupValues[2] == "i" || match.groupValues[2] == "+i" -> 1.0
+        match.groupValues[2] == "" -> 0.0
+        else -> match.groupValues[2].dropLast(1).toDouble()
     }
     return Complex(re, im)
 }
@@ -50,11 +35,6 @@ class Complex(val re: Double, val im: Double) {
      */
     constructor(x: Double) : this(x, 0.0)
 
-    /**
-     * Конструктор из строки вида x+yi
-     */
-
-    constructor(s: String) : this(strComplex(s).re, strComplex(s).im)
 
     /**
      * Сложение.
@@ -91,13 +71,17 @@ class Complex(val re: Double, val im: Double) {
     override fun equals(other: Any?): Boolean = other is Complex && re == other.re && im == other.im
 
 
+    override fun hashCode(): Int = 19 * im.hashCode() + re.hashCode()
+
     /**
      * Преобразование в строку
      */
-    override fun toString(): String = buildString {
-        if (im == 0.0) append("$re") else if (re != 0.0) {
-            if (im > 0) append("$re+${im}i") else append("$re${im}i")
-        } else append("${im}i")
+    override fun toString(): String = when {
+        im == 0.0 -> "$re"
+        im > 0.0 && re != 0.0 -> "$re+${im}i"
+        im < 0.0 && re != 0.0 -> "$re${im}i"
+        else -> "${im}i"
     }
+
 
 }
