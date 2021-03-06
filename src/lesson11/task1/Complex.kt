@@ -13,13 +13,11 @@ package lesson11.task1
  * Аргументы конструктора -- вещественная и мнимая часть числа.
  */
 fun Complex(s: String): Complex {
-    var re = 0.0
-    var im = 0.0
 
     val match = Regex("""([+|-]?[0-9.]+)?(?![i])([+|-]?[0-9.]*i)?""")
         .find(s) ?: throw IllegalArgumentException("Invalid format")
-    re = if (match.groupValues[1] == "") 0.0 else match.groupValues[1].toDouble()
-    im = when {
+    val re = if (match.groupValues[1] == "") 0.0 else match.groupValues[1].toDouble()
+    val im = when {
         match.groupValues[2] == "-i" -> -1.0
         match.groupValues[2] == "i" || match.groupValues[2] == "+i" -> 1.0
         match.groupValues[2] == "" -> 0.0

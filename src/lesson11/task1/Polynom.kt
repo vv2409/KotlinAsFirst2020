@@ -30,17 +30,16 @@ class Polynom(vararg coeffs: Double) {
 
     constructor(l: List<Double>) : this(*l.toDoubleArray())
 
-    private val list = coeffs.toMutableList()
-    private fun remove(listPolynom: MutableList<Double>): MutableList<Double> {
-        return if (listPolynom.size == 1 && listPolynom[0] == 0.0) listPolynom else {
-            while (listPolynom[0] == 0.0 && listPolynom.size != 0) {
-                listPolynom.removeAt(0)
-            }
-            listPolynom
-        }
-    }
 
-    val listPolynom = remove(list)
+    val listPolynom =
+        if (coeffs.toMutableList().size == 1 && coeffs.toMutableList()[0] == 0.0) coeffs.toMutableList() else {
+            val list = coeffs.toMutableList()
+            while (list[0] == 0.0 && list.size != 0) {
+                list.removeAt(0)
+            }
+            list
+        }
+
     val size = listPolynom.size
 
 
@@ -89,10 +88,8 @@ class Polynom(vararg coeffs: Double) {
      */
     operator fun unaryMinus(): Polynom {
         val res = mutableListOf<Double>()
-        var i = 0
-        while (i != list.size) {
-            res.add(-list[i])
-            i++
+        for (element in listPolynom) {
+            res.add(-element)
         }
         return Polynom(res)
     }
@@ -141,14 +138,14 @@ class Polynom(vararg coeffs: Double) {
                 else -> Polynom(listPolynom[0] / other.listPolynom[0])
             }
             else -> {
-                var denominator = this
+                var divider = this
                 val res = mutableListOf<Double>()
-                while (other.size <= denominator.size) {
-                    val quotient = denominator.listPolynom[0] / other.listPolynom[0]
+                while (other.size <= divider.size) {
+                    val quotient = divider.listPolynom[0] / other.listPolynom[0]
                     res += quotient
-                    val multiplier = listOf(quotient) + List<Double>(denominator.size - other.size) {0.0}
-                    denominator -= other * Polynom(multiplier)
-                    if (denominator.size == 1 && denominator.listPolynom[0] == 0.0) break
+                    val multiplier = listOf(quotient) + List<Double>(divider.size - other.size) { 0.0 }
+                    divider -= other * Polynom(multiplier)
+                    if (divider.size == 1 && divider.listPolynom[0] == 0.0) break
                 }
                 return Polynom(res)
             }
